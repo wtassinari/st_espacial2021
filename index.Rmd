@@ -37,7 +37,7 @@ layout: true
 <div style="position: absolute;right:50px;top:11px;color:gray;">`r rmarkdown::metadata$author` - `r rmarkdown::metadata$institute`</div>
 
 ```{r xaringan-tile-view, echo=FALSE}
-xaringanExtra::use_tile_view()
+ xaringanExtra::use_tile_view()
 ```
 
 
@@ -129,18 +129,21 @@ library(knitr)
 
 ## O que são Séries Temporais ?
 
--   **Definição:** Entende-se por Séries Temporais (ST) todo e qualquer
+-   Definição: Entende-se por Séries Temporais (ST) todo e qualquer
     conjunto de dados (absolutos ou relativos, discretos ou contínuos),
     ordenados cronologicamente.
 
--   **Condição:** Esses dados seguem uma ordenação em função do tempo
+-   Condição: Esses dados seguem uma ordenação em função do tempo
     (dependência temporal).
+    
 
 ---
 
 # Alguns exemplos de séries temporais
 
-```{r echo=F, fig.align="center", out.width= "50%", fig.show='hold'}
+
+
+```{r echo=F, fig.align="center", out.width= "35%", fig.show='hold'}
 knitr::include_graphics('figuras/ST1.png')
 ```
 
@@ -154,8 +157,7 @@ knitr::include_graphics('figuras/ST1.png')
 |                                        Estabelecimento de causalidade: Estudo da relação de causa-efeito                                       |                         Vacina X sarampo; Mortalidade por DIC X melhor assistência                        |
 
 ---
-
-## Estacionariedade
+# Estacionariedade
 
 -   Uma série temporal é dita estacionária quando ela se desenvolve no
     tempo aleatoriamente ao redor de uma média constante e com uma
@@ -165,7 +167,8 @@ knitr::include_graphics('figuras/ST1.png')
 knitr::include_graphics('figuras/ST2.png')
 ```
 
-## Tendência
+---
+# Tendência
 
 -   É a indicadora da direção global dos dados (ou movimento geral da
     variável), do percurso traçado e de sua linha contínua.
@@ -174,7 +177,8 @@ knitr::include_graphics('figuras/ST2.png')
 knitr::include_graphics('figuras/ST3.png')
 ```
 
-## Ciclo
+---
+# Ciclo
 
 * Os ciclos são oscilações (aproximadamente regulares) em torno da tendência. Podem dever-se a fenômenos naturais, socioculturais ou econômicos, como variações climáticas (ex: excesso ou falta de chuva pode produzir ciclos agrícolas)
 
