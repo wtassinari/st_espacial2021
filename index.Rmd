@@ -144,18 +144,6 @@ library(knitr)
 knitr::include_graphics('figuras/ST1.png')
 ```
 
-<!-- -- -->
-
-<!-- # Hipóteses básicas do estudo das séries temporais -->
-
-<!-- -   Há um sistema causal relacionando as variáveis no tempo; -->
-
-<!-- -   Tais hipóteses se baseiam no pressuposto de que as relações -->
-<!--     apontadas pela experiência pregressa permitem prever o possível -->
-<!--     comportamento das variáveis sob análise, determinando se seu -->
-<!--     comportamento apresenta propriedades determinísticas e/ou -->
-<!--     aleatórias. -->
-
 ---
 
 # Aplicações
