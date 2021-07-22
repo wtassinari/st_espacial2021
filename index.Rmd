@@ -49,7 +49,7 @@ style_mono_accent(
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   fig.width=9, fig.height=3.5, fig.retina=3,
-  out.width = "90%",
+  out.width = "100%",
   cache=TRUE,
   prompt=FALSE,
   tidy=TRUE,
@@ -652,11 +652,11 @@ ggplotly(map1)
 
 #### Exemplo: Desigualdade no nível distrital na cobertura de saúde reprodutiva, materna, neonatal e infantil na Índia
 
-```{r echo=F, fig.align="center", out.width="65%"}
+```{r echo=F, fig.align="center", out.width="75%"}
 knitr::include_graphics('figuras/moran_local2.png')
 ```
 
-[Fonte: PANDA, Basant Kumar; KUMAR, Gulshan; AWASTHI, Ashish. District level inequality in reproductive, maternal, neonatal and child health coverage in India. BMC public health, v. 20, n. 1, p. 1-10, 2020.](https://bmcpublichealth.biomedcentral.com/articles/10.1186/s12889-020-8151-9)
+[Fonte: Panda et al., 2020](https://bmcpublichealth.biomedcentral.com/articles/10.1186/s12889-020-8151-9)
 
 ---
 
@@ -812,8 +812,164 @@ tm_shape(setor.sf) +  tm_borders("black") +
 
 ```
 
+---
+  
+## Kernel da incidência de dengue
+
+### Kernel da taxa de incidência de dengue com a largura de banda de 500m
+
+```{r, echo=F}
+
+## Convertendo o dado de pontos (padrão pontual) para dados de área
+## conta casos por setor 
+casos.sf$contador <- 1 
+casos <- setor.sf |>  
+  st_join(casos.sf) |> 
+  filter(CLASSI_FIN == 1) %>%  ## seleciona somente os casos confirmados
+  group_by(ID) |> 
+  summarise(casos = sum(contador))
+
+st_geometry(casos) <- NULL  ## remove atributos de geometria
+
+## numero de depositos de Lixo por setor 
+lixo.sf$contador <- 1 
+
+lixo <- setor.sf |>  
+  st_join(lixo.sf) |> 
+  group_by(ID) |> 
+  summarise(lixo = sum(contador))
+
+st_geometry(lixo) <- NULL ## remove atributos de geometria
+
+# Inserindo as contagens dos casos e de pontos de coleta de lixo no atributo com a geometria.
+setor.sf <- setor.sf |> 
+  left_join(lixo,by = 'ID') |> 
+  left_join(casos,by = 'ID') 
+
+```
 
 
+```{r, echo=F,  out.width="70%"}
+
+# Calculando a taxa de incidência e plotando o mapa temático dos
+#    pontos de coleta de lixo por setor censitário
+setor.sf$tx <- (setor.sf$casos/setor.sf$pop) * 1000
+setor.sf$tx[is.na(setor.sf$tx)] <- 0 # Transformando os missings em zero
+
+```
+
+
+```{r, echo=F,  out.width="70%"}
+
+# Primeiramente é necessário dissolver os polígonos em formato sf para
+# obter o contorno. Nesse caso queremos preservar o atributo AREA
+
+dourados.contorno <- st_union(setor.sf)
+
+```
+
+```{r, echo=F,  out.width="70%"}
+dourados.w <- as.owin(st_geometry(dourados.contorno))
+
+```
+
+
+```{r, echo=F,  out.width="70%"}
+# Extraindo os centróides dos polígonos em Dourados/MS
+centroides <- st_centroid(st_geometry(setor.sf))
+
+# Transformando em os centróides em formato sp
+centroides.sp <- as.data.frame(as_Spatial(centroides))
+names(centroides.sp) <- c('X','Y')
+
+```
+
+
+```{r, echo=F,  out.width="70%"}
+#  Colocando os pontos no formato sp
+centroides.ppp <- ppp(centroides.sp$X,centroides.sp$Y, dourados.w)
+
+```
+
+
+```{r, echo=F,  out.width="150%"}
+
+# Fazendo o kernel por atributo da taxa de detecção
+kernel.tx <- density(centroides.ppp, 500, weights = setor.sf$tx, scalekernel = TRUE)
+
+plot(kernel.tx,  main = "")
+
+```
+
+---
+
+## Autocorrelação da taxa de incidência de dengue Dourados/MS
+
+
+### Correlograma
+
+```{r, echo=F,  out.width="100%"}
+# Construindo a matriz de vizinhança para verificar a autocorrelação espacial
+library(spdep)
+viz <- poly2nb(setor.sf)
+
+
+# Iremos precisar da coordenadas dos centróides
+setor.sp <- as(setor.sf, 'Spatial') # convertendo em formato sp
+coord <- coordinates(setor.sp) # coordenadas dos centroidas dos poligonos de dourados
+
+viz.sf <- as(nb2lines(viz, coords = coord), 'sf')
+viz.sf <- st_set_crs(viz.sf, st_crs(setor.sf))
+
+pesos.viz <- nb2listw(viz)
+# moran.test(setor.sf$tx, pesos.viz)
+
+correl <- sp.correlogram(viz, setor.sf$tx, order = 8, method = "I")
+plot(correl)
+
+```
+
+---
+
+## Autocorrelação da taxa de incidência de dengue Dourados/MS
+
+#### Mapeando os polígonos que tiveram os p-valores mais significativos no Moran Local
+
+```{r, echo=F,  out.width="100%"}
+setor.sf$pval <- localmoran(setor.sf$tx, pesos.viz)[,5]
+
+tm_shape(setor.sf) + 
+  tm_polygons(col='pval', title="p-valores", breaks=c(0, 0.01, 0.05, 0.10, 1), border.col = "white", palette="-Oranges") +
+  tm_scale_bar(width = 0.15) 
+```
+
+---
+
+## Autocorrelação da taxa de incidência de dengue Dourados/MS
+
+#### Mapeando os polígonos que tiveram os p-valores mais significativos no Moran Local
+
+
+```{r, echo=F,  out.width="70%"}
+# Moran Local (Lisa Map) da taxa de incidência Dourados/MS
+resI <- localmoran.sad(lm(setor.sf$tx ~ 1), 1:length(viz), viz, style = "W")
+```
+
+```{r, echo=F,  out.width="100%"}
+setor.sf$MoranLocal <- summary(resI)[,1] 
+
+library(scales)
+
+map2 <- ggplot(setor.sf) + 
+  geom_sf(aes(fill = MoranLocal), color = 'black') +
+  scale_fill_gradientn(colours=c("blue", "white", "red"), 
+                       values=rescale(c(min(setor.sf$MoranLocal), 0, max(setor.sf$MoranLocal))), guide="colorbar") + 
+  ggtitle("Moran local") + 
+  theme_void()
+
+ggplotly(map2)
+
+```
 
 ---
   
