@@ -106,6 +106,25 @@ htmltools::tagList(
 xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons"))
 ```
 
+```{r, echo=FALSE}
+## Color Format
+colFmt <- function(x,color) {
+  
+  outputFormat <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+  
+  if(outputFormat == 'latex') {
+    ret <- paste("\\textcolor{",color,"}{",x,"}",sep="")
+  } else if(outputFormat == 'html') {
+    ret <- paste("<font color='",color,"'>",x,"</font>",sep="")
+  } else {
+    ret <- x
+  }
+
+  return(ret)
+}
+```
+
+
 ```{r - Packages, echo=FALSE}
 library(readr)
 library(tidyverse)
@@ -317,7 +336,7 @@ knitr::include_graphics('figuras/ST9.png')
 
 - **Algumas técnicas de suavização:** Médias Móveis, Kernel, Loess/Lowess, Splines e Generalized Additive Model (GAM).
 
-```{r, echo=F,  out.width="70%"}
+```{r, echo=F, fig.align="center",  out.width="70%"}
 library(forecast)
 plot(UKDriverDeaths, ylab='',main="Mortes em estradas no Reino Unido (1969–1984)")
 lines(ma(UKDriverDeaths,12),col=2,lty=1,lwd=2)
@@ -449,12 +468,136 @@ dygraph(predicted, main = "Predicted Lung Deaths (UK)") %>%
 
 
 ---
-  
-## Aplicação: Análise exploratória utilizando os dados de dengue em Dourados/MS
-  
--   Nesta apresentação serão utilizados os dados que fizeram parte da dissertação de [Isis Rodrigues                Reitman](https://sucupira.capes.gov.br/sucupira/public/consultas/coleta/trabalhoConclusao/viewTrabalhoConclusao.jsf?popup=true&id_trabalho=3666174) intitulada *"SAÚDE E AMBIENTE URBANO: A RELAÇÃO DE INCIDÊNCIA DE
-    DENGUE E AS DISPARIDADES ESPACIAIS EM DOURADOS - MS"*, apresentada no [Programa de Pós-Graduação em Geografia da Universidade Federal da Grande Douradosos/MS](https://portal.ufgd.edu.br/pos-graduacao/mestrado-doutorado-geografia/index), em abril de 2016.
 
+# Introdução à Análise Estatística Espacial
+
+## O que é Análise Estatística Espacial ?
+
+-   São métodos estatísticos que levam em consideração a localização
+    espacial do fenômeno estudado;
+
+-   Segundo Bailey & Gatrell (1995), *"Análise estatística espacial pode
+    ser realizada quando os dados são espacialmente localizados e se
+    considera explicitamente a possível importância de seu arranjo
+    espacial na análise ou interpretação dos resultados"*
+
+---
+
+## Origem da Estatística Espacial
+
+-   Dr. John Snow (1813-1858) $\rightarrow$ Considerado pai da
+    Epidemiologia Moderna
+
+```{r echo=F, fig.align="center", out.width= "60%", fig.show='hold'}
+include_graphics('figuras/snow2_2019.png')
+```
+
+Mapeamento dos casos de coléra ($\bullet$) e as bombas de água (X) em
+Londres, 1854.
+
+---
+
+## Objetivos da Estatística Espacial
+
+1)  Análise de padrões espaciais e espaço-temporais (ex: Análise
+    Exploratória Espacial, Correlação Espacial)
+
+2)  Modelagem Espacial (ex: Modelos Estatísticos de Regressão Espacial) 
+    
+    
+---
+
+## Dependência Espacial ou Autocorrelação Espacial
+
+-   *"Todas as coisas se parecem, coisas mais próximas são mais
+    parecidas que aquelas mais distantes."* (Tobler, 1979).
+     `r colFmt("Também conhecida como $1^a$ Lei da Geografia",'red')`
+    
+---
+
+## Tipologia dos Dados Espaciais
+
+Os diferentes tipos de dados espaciais são tradicionalmente
+classificados de acordo com uma tipologia. Esta caracterização diz
+respeito a natureza estocástica da observação.
+
+
+```{r echo=F, fig.align="center", out.width= "85%", fig.show='hold'}
+include_graphics('figuras/slide4.jpg')
+
+```
+
+---
+
+## Padrões Pontuais
+
+- O principal interesse está no conjunto de coordenadas geográficas
+    representando as localizações exatas de eventos.
+
+- Exemplos: Localização de crimes, localização da residência dos casos
+    de dengue, localização de espécies vegetais, etc.
+
+```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="25%", comment=NA}
+knitr::include_graphics('figuras/coordenadas.png')
+```
+
+```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="55%", comment=NA}
+knitr::include_graphics('figuras/pontos1.jpg')
+```
+
+---
+
+## Estimativas de Kernel (ou Mapas de Calor)
+
+#### Exemplo: Localização da ocorrência de casos de dengue em Belo Horizonte/MG
+
+```{r echo=F, fig.align="center", out.width= "45%", fig.show='hold'}
+knitr::include_graphics('figuras/dengueBH.png')
+```
+
+
+---
+
+## Geoestatística
+
+- Podemos definir como sendo uma análise de um atributo espacialmente
+    contínuo amostrado em localizações fixas.
+
+- Os dados compreendem um conjunto de localizações (em geral latitudes
+    e longitudes), mas atribuidos a eles uma medida.
+    
+- Exemplos: volume de chuva, concentração de poluentes no ar, número de ovos de
+    Aedes postado em ovitrampas, etc.
+
+---
+
+## Krigagem
+
+#### Exemplo: Mapa sobre o teor de argila no solo.
+
+```{r echo=F, fig.align="center", out.width= "90%", fig.show='hold'}
+knitr::include_graphics('figuras/geoestatistica7.png')
+```
+
+---
+
+## Dados de Área
+
+- Na análise de áreas o atributo estudado é em geral resultado de uma
+    contagem ou uma medida de síntese (em geral somas ou médias) em uma
+    determinada área bem definida, por exemplo um polígono.
+
+- Tal polígono cuja forma pode ser complexa bem como as relações de
+    vizinhança.
+
+- O objetivo é a detecção e explicação de padrões e tendências
+    observados entre áreas.
+
+---
+
+### Mapa Temático
+
+#### Exemplo: Porcentagem de municípios com rede de esgoto de acordo com a unidade da federação
 
 ```{r, echo=F}
 # Bibliotecas
@@ -464,7 +607,110 @@ library(sf)
 library(maptools)
 library(spatstat)
 library(tmap)
+
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(geobr)
+library(leaflet)
+library(ggspatial)
+
+library(plotly)
 ```
+
+
+```{r, echo=F, out.width= "100%", }
+brasil.ufs <- read_state(code_state = "all", year=2019, showProgress = FALSE)
+
+acesso_san <- data.frame(code_state = c(12, 27, 16, 13, 29, 23, 53, 32, 52, 21, 51, 50, 31, 15, 
+                                   25, 41, 26, 22, 33, 24, 43, 11, 14, 42, 35, 28, 17), 
+                         com_rede = c(0.273, 0.412, 0.313, 0.177, 0.513, 0.696, 1.000, 0.974, 0.280, 0.065, 
+                                      0.191, 0.449, 0.916, 0.063, 0.731, 0.421, 0.881, 0.045, 0.924, 0.353, 
+                                      0.405, 0.096, 0.400, 0.352, 0.998, 0.347, 0.129))
+
+brasil.ufs <- brasil.ufs |> 
+  left_join(acesso_san, by = "code_state") |> 
+  mutate(com_rede = 100*com_rede) 
+
+map1 <-  ggplot(brasil.ufs, aes(fill = com_rede), color = "black") +
+    geom_sf() + 
+    scale_fill_viridis(name = "Rede de esgoto (%)", direction = -1) + 
+  xlab("Longitude") + 
+  ylab("Latitude") +
+  annotation_scale(location = "bl") +
+  annotation_north_arrow(location = "br") +
+    theme_minimal()
+
+ggplotly(map1)
+
+```
+
+
+---
+
+## Moran Global, Moran Local e Lisa Map
+
+#### Exemplo: Desigualdade no nível distrital na cobertura de saúde reprodutiva, materna, neonatal e infantil na Índia
+
+```{r echo=F, fig.align="center", out.width="70%"}
+knitr::include_graphics('figuras/moran_local2.png')
+```
+
+[Fonte: PANDA, Basant Kumar; KUMAR, Gulshan; AWASTHI, Ashish. District level inequality in reproductive, maternal, neonatal and child health coverage in India. BMC public health, v. 20, n. 1, p. 1-10, 2020.](https://bmcpublichealth.biomedcentral.com/articles/10.1186/s12889-020-8151-9)
+
+---
+
+## Modelos de Regressão Espacial
+
+-   `r colFmt(" Hipótese de independência das observações em geral é Falsa ",'orange')`
+    $\rightarrow$ Dependência Espacial
+
+-   Efeitos Espaciais $\rightarrow$ Se existir forte tendência ou
+    correlação espacial, os resultados serão influenciados, apresentando
+    associação estatística onde não existe (e vice-versa);
+
+-   `r colFmt("**Como verificar ?** ",'darkred')` $\rightarrow$ Medir a
+    autocorrelação espacial dos resíduos da regressão (Índice de Moran
+    dos resíduos).
+
+-   Autocorrelação espacial constatada ! E agora ? $\rightarrow$
+    Utilizar Modelos de regressão que incorporam efeitos espaciais:
+
+---
+
+## Modelos de Regressão Espacial
+
+i)  **Modelos Globais:** utilizam um único parâmetro para capturar a
+        estrutura de correlação espacial $\rightarrow$ ex: *Spatial
+        Error Models (CAR)*
+
+$$y_i = \beta_0 + \sum^{p}_{k} \beta_k x_{ik}  + \varepsilon_i \text{    , sendo  }  \varepsilon_i = \lambda  W + \xi$$
+
+- Os efeitos da autocorrelação espacial são associados ao termo de
+    erro. Sendo $W$ a matriz de vizinhaça, $\varepsilon$ a componente do
+    erro com efeitos espaciais, $λ$ é o coeficiente autoregressivo e
+    $\xi$ é a componente do erro com variância constante e não
+    correlacionada.
+
+- A hipótese nula para a não existência de autocorrelação é que
+    $\lambda = 0$, ou seja, o termo de erro não é espacialmente
+    correlacionado.
+
+ii) **Modelos Locais:** parâmetros variam continuamente no espaço
+        ex: *Geographically Weighted Regression (GWR)*
+
+$$y_i = \beta_{0}(u_i, v_i) + \sum^{p}_{k}  \beta_k (u_i, v_i) x_{ik} + \varepsilon_i \text{    , sendo  } (u_i, v_i) \text{    as coordenadas geográficas}$$
+
+[Fonte: ARDILLY, Pascal et al. Manuel d'analyse spatiale. 2018.](https://ec.europa.eu/eurostat/documents/3859598/9462709/INSEE-ESTAT-SPATIAL-ANA-18-EN.pdf)
+
+
+---
+
+## Aplicação: Análise exploratória utilizando os dados de dengue em Dourados/MS
+  
+-   Nesta apresentação serão utilizados os dados que fizeram parte da dissertação de [Isis Rodrigues                Reitman](https://sucupira.capes.gov.br/sucupira/public/consultas/coleta/trabalhoConclusao/viewTrabalhoConclusao.jsf?popup=true&id_trabalho=3666174) intitulada *"SAÚDE E AMBIENTE URBANO: A RELAÇÃO DE INCIDÊNCIA DE
+    DENGUE E AS DISPARIDADES ESPACIAIS EM DOURADOS - MS"*, apresentada no [Programa de Pós-Graduação em Geografia da Universidade Federal da Grande Douradosos/MS](https://portal.ufgd.edu.br/pos-graduacao/mestrado-doutorado-geografia/index), em abril de 2016.
+
 
 
 ```{r, echo=F}
@@ -531,6 +777,8 @@ tm_shape(setor.sf) +  tm_borders("black") +
 ---
   
 # Bibliografia sugerida
+
+- Druck, S.; Carvalho, M.S.; Câmara, G.; Monteiro, A.V.M. (eds). [Análise Espacial de Dados Geográficos. Brasília, EMBRAPA, 2004](http://www.dpi.inpe.br/gilberto/livro/analise/cap2-eventos.pdf)
   
 - Hyndman, Rob J.; ATHANASOPOULOS, George. [Forecasting: principles and practice.](https://otexts.com/fpp2/) OTexts, 2018.
 
@@ -538,23 +786,11 @@ tm_shape(setor.sf) +  tm_borders("black") +
 
 - MORETTIN, Pedro A.; TOLOI, Clélia M.C. Análise de Séries Temporais: Modelos Lineares Univariados. Bluscher - ABE - Projeto Fisher. Edição 3, 2018.
 
--   Druck, S.; Carvalho, M.S.; Câmara, G.; Monteiro, A.V.M. (eds).
-[Análise Espacial de Dados
-  Geográficos](http://www.dpi.inpe.br/gilberto/livro/analise/).
-Brasília, EMBRAPA, 2004.
+- Interactive Spatial Data Analysis by Trevor C. Bailey , Anthony C. Gatrell Routledge, 1995
 
--   Interactive Spatial Data Analysis by Trevor C. Bailey , Anthony C.
-Gatrell Routledge, 1995
+- Applied Spatial Data Analysis with R; Roger S. Bivand, Edzer Pebesma, Virgilio Gomez-Rubio Springer; Edição: 2nd ed. 2013
 
--   Applied Spatial Statistics for Public Health Data; Lance A. Waller,
-Carol A. Gotway Wiley-Interscience 1St ed. 2004
-
--   Applied Spatial Data Analysis with R; Roger S. Bivand, Edzer Pebesma
-, Virgilio Gomez-Rubio Springer; Edição: 2nd ed. 2013
-
--   Geocomputation with R by Robin Lovelace, Jakub Nowosad and Jannes
-Muenchow. [Geocomputation with
-           R](https://geocompr.robinlovelace.net/), 2021.
+- Geocomputation with R by Robin Lovelace, Jakub Nowosad and Jannes Muenchow. [Geocomputation with R](https://geocompr.robinlovelace.net/), 2021.
 
 ---
   
@@ -564,7 +800,7 @@ Muenchow. [Geocomputation with
 (ENSP/FIOCRUZ)
 [link](http://ensino.ensp.fiocruz.br/cursos/mestrado-e-doutorado/epidemiologia-em-saude-publica))
 
-```{r echo=F, fig.align="center", out.width="80%"}
+```{r echo=F, fig.align="center", out.width="70%"}
 include_graphics('figuras/programa_epidemiologia.png')
 
 ```
