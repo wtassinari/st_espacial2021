@@ -652,7 +652,7 @@ ggplotly(map1)
 
 #### Exemplo: Desigualdade no nível distrital na cobertura de saúde reprodutiva, materna, neonatal e infantil na Índia
 
-```{r echo=F, fig.align="center", out.width="70%"}
+```{r echo=F, fig.align="center", out.width="65%"}
 knitr::include_graphics('figuras/moran_local2.png')
 ```
 
@@ -702,6 +702,47 @@ ii) **Modelos Locais:** parâmetros variam continuamente no espaço
 $$y_i = \beta_{0}(u_i, v_i) + \sum^{p}_{k}  \beta_k (u_i, v_i) x_{ik} + \varepsilon_i \text{    , sendo  } (u_i, v_i) \text{    as coordenadas geográficas}$$
 
 [Fonte: ARDILLY, Pascal et al. Manuel d'analyse spatiale. 2018.](https://ec.europa.eu/eurostat/documents/3859598/9462709/INSEE-ESTAT-SPATIAL-ANA-18-EN.pdf)
+
+
+---
+
+## Como trabalhar com Análise Estatística Espacial: Algumas ferramentas
+
+### SiG QGIS
+
+```{r echo=F, fig.align="center", out.width="60%"}
+knitr::include_graphics('figuras/QGIS.png')
+```
+
+[QGIS: Um Sistema de Informação Geográfica livre e
+aberto](https://www.qgis.org/pt_BR/site/)
+
+---
+
+## Como trabalhar com Análise Estatística Espacial: Algumas ferramentas
+
+### GEODA
+
+```{r echo=F, fig.align="center", out.width="70%"}
+knitr::include_graphics('figuras/GEODA.png')
+```
+
+[GEODA: AN INTRODUCTION TO SPATIAL DATA
+ANALYSIS](https://spatial.uchicago.edu/geoda)
+
+---
+
+## Como trabalhar com Análise Estatística Espacial: Algumas ferramentas
+
+### R
+
+```{r echo=F, fig.align="center", out.width="50%"}
+knitr::include_graphics('figuras/logo_ubuntu.png')
+```
+
+Fonte: [Dicas para integração e instalação do R 4.0 no Ubuntu 20.04 LTS
+e os pacotes
+espaciais](https://rtask.thinkr.fr/installation-of-r-4-0-on-ubuntu-20-04-lts-and-tips-for-spatial-packages/)
 
 
 ---
