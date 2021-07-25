@@ -68,6 +68,7 @@ knitr::opts_chunk$set(
 <!-- layout: true -->
 <!-- <div style="position: absolute;right:50px;top:11px;color:gray;">`r rmarkdown::metadata$author` - `r rmarkdown::metadata$institute`</div> -->
 
+
 ```{r xaringan-tile-view, echo=FALSE}
  xaringanExtra::use_tile_view()
 ```
@@ -105,6 +106,8 @@ htmltools::tagList(
 ```{r xaringanExtra, echo=FALSE}
 xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons"))
 ```
+
+
 
 ```{r, echo=FALSE}
 ## Color Format
@@ -706,7 +709,7 @@ $$y_i = \beta_{0}(u_i, v_i) + \sum^{p}_{k}  \beta_k (u_i, v_i) x_{ik} + \varepsi
 
 ---
 
-## Como trabalhar com Análise Estatística Espacial: Algumas ferramentas
+## Ferramentas para análise estatística espacial:
 
 ### SiG QGIS
 
@@ -719,7 +722,7 @@ aberto](https://www.qgis.org/pt_BR/site/)
 
 ---
 
-## Como trabalhar com Análise Estatística Espacial: Algumas ferramentas
+## Ferramentas para análise estatística espacial:
 
 ### GEODA
 
@@ -732,7 +735,19 @@ ANALYSIS](https://spatial.uchicago.edu/geoda)
 
 ---
 
-## Como trabalhar com Análise Estatística Espacial: Algumas ferramentas
+## Ferramentas para análise estatística espacial:
+
+### SatScan
+
+```{r echo=F, fig.align="center", out.width="60%"}
+knitr::include_graphics('figuras/satscan.png')
+```
+
+[SatScan: A free software that analyzes spatial, temporal and space-time](https://www.satscan.org/)
+
+---
+
+## Ferramentas para análise estatística espacial:
 
 ### R
 
@@ -943,33 +958,33 @@ tm_shape(setor.sf) +
   tm_scale_bar(width = 0.15) 
 ```
 
----
+<!-- --- -->
 
-## Autocorrelação da taxa de incidência de dengue Dourados/MS
+<!-- ## Autocorrelação da taxa de incidência de dengue Dourados/MS -->
 
-#### Mapeando os polígonos que tiveram os p-valores mais significativos no Moran Local
+<!-- #### Mapeando os polígonos que tiveram os p-valores mais significativos no Moran Local -->
 
 
-```{r, echo=F,  out.width="70%"}
-# Moran Local (Lisa Map) da taxa de incidência Dourados/MS
-resI <- localmoran.sad(lm(setor.sf$tx ~ 1), 1:length(viz), viz, style = "W")
-```
+<!-- ```{r, echo=F,  out.width="70%"} -->
+<!-- # Moran Local (Lisa Map) da taxa de incidência Dourados/MS -->
+<!-- resI <- localmoran.sad(lm(setor.sf$tx ~ 1), 1:length(viz), viz, style = "W") -->
+<!-- ``` -->
 
-```{r, echo=F,  out.width="100%"}
-setor.sf$MoranLocal <- summary(resI)[,1] 
+<!-- ```{r, echo=F,  out.width="100%"} -->
+<!-- setor.sf$MoranLocal <- summary(resI)[,1]  -->
 
-library(scales)
+<!-- library(scales) -->
 
-map2 <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = MoranLocal), color = 'black') +
-  scale_fill_gradientn(colours=c("blue", "white", "red"), 
-                       values=rescale(c(min(setor.sf$MoranLocal), 0, max(setor.sf$MoranLocal))), guide="colorbar") + 
-  ggtitle("Moran local") + 
-  theme_void()
+<!-- map2 <- ggplot(setor.sf) +  -->
+<!--   geom_sf(aes(fill = MoranLocal), color = 'black') + -->
+<!--   scale_fill_gradientn(colours=c("blue", "white", "red"),  -->
+<!--                        values=rescale(c(min(setor.sf$MoranLocal), 0, max(setor.sf$MoranLocal))), guide="colorbar") +  -->
+<!--   ggtitle("Moran local") +  -->
+<!--   theme_void() -->
 
-ggplotly(map2)
+<!-- ggplotly(map2) -->
 
-```
+<!-- ``` -->
 
 ---
   
