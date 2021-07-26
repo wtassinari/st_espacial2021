@@ -49,7 +49,7 @@ style_mono_accent(
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   fig.width=9, fig.height=3.5, fig.retina=3,
-  out.width = "100%",
+#  out.width = "100%",
   cache=TRUE,
   prompt=FALSE,
   tidy=TRUE,
@@ -62,7 +62,8 @@ knitr::opts_chunk$set(
 )
 
 # https://www.kirenz.com/slides/xaringan-demo-slides.html#40
-
+# https://www.garrickadenbuie.com/talk/extra-special-xaringan/
+# https://pkg.garrickadenbuie.com/xaringanExtra/#/README?id=xaringanextra
 ```
 
 <!-- layout: true -->
@@ -104,9 +105,13 @@ htmltools::tagList(
 ```
 
 ```{r xaringanExtra, echo=FALSE}
-xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons"))
+xaringanExtra::use_xaringan_extra(c("tile_view", "panelset", "editable", 
+    "slide_tone", "animate", "tachyons"))
 ```
 
+```{r xaringan-animate-all, echo=FALSE}
+xaringanExtra::use_animate_all("roll")
+```
 
 
 ```{r, echo=FALSE}
@@ -602,7 +607,7 @@ knitr::include_graphics('figuras/geoestatistica7.png')
 
 #### Exemplo: Porcentagem de municípios com rede de esgoto de acordo com a unidade da federação
 
-```{r, echo=F}
+```{r, echo=F,  out.width="100%"}
 # Bibliotecas
 library(readr)
 library(tidyverse)
@@ -799,7 +804,7 @@ casos.sf <- st_as_sf(casos, coords = c("X", "Y"), crs = 31981)
 ``` 
 
 
-```{r, echo=F}
+```{r, echo=F,  out.width="100%"}
 # Lendo e plotando os os pontos de coleta de lixo georreferenciados em
 #    Dourados/MS
 unzip('dados/lixo_dourados.zip', exdir='dados')
@@ -907,7 +912,7 @@ centroides.ppp <- ppp(centroides.sp$X,centroides.sp$Y, dourados.w)
 ```
 
 
-```{r, echo=F,  out.width="150%"}
+```{r, echo=F,  out.width="100%"}
 
 # Fazendo o kernel por atributo da taxa de detecção
 kernel.tx <- density(centroides.ppp, 500, weights = setor.sf$tx, scalekernel = TRUE)
