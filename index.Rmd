@@ -79,19 +79,23 @@ knitr::opts_chunk$set(
 xaringanExtra::use_share_again()
 ```
 
+
 ```{r xaringan-scribble, echo=FALSE}
 xaringanExtra::use_scribble()
 ```
 
+
 ```{r xaringan-panelset, echo=FALSE}
 xaringanExtra::use_panelset()
 ```
+
 
 ```{r style-share-again, echo=FALSE}
 xaringanExtra::style_share_again(
   share_buttons = c("twitter", "linkedin", "pocket")
 )
 ```
+
 
 ```{r xaringanExtra-clipboard, echo=FALSE}
 htmltools::tagList(
@@ -104,13 +108,15 @@ htmltools::tagList(
 )
 ```
 
+
 ```{r xaringanExtra, echo=FALSE}
 xaringanExtra::use_xaringan_extra(c("tile_view", "panelset", "editable", 
     "slide_tone", "animate", "tachyons"))
 ```
 
+
 ```{r xaringan-animate-all, echo=FALSE}
-xaringanExtra::use_animate_all("roll")
+xaringanExtra::use_animate_all("fade")
 ```
 
 
@@ -153,7 +159,7 @@ xaringanExtra::use_logo("logorural.jpg", width="100px")
 
 # Apresentação
 
-Essa aplicação também se encontra no [Curso de Estudos
+O conteúdo na íntegra dessa apresentação pode ser encontrado no [Curso de Estudos
     Ecológicos](https://ogcruz.github.io/) ministrado para o curso de
     [Pós-Graduação em Epidemiologia em Saúde
     Pública](http://ensino.ensp.fiocruz.br/cursos/mestrado-e-doutorado/epidemiologia-em-saude-publica)
